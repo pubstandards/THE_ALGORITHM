@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
     name='the_algorithm',
-    version='1.0',
+    version='1.1',
     description='The Pubstandards Algorithm',
     author='Jonty Wareing',
     author_email='jonty@jonty.co.uk',
