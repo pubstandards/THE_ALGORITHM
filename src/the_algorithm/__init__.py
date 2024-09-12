@@ -5,7 +5,8 @@ from typing import Optional
 
 FIRST_PUBSTANDARDS = datetime.date(year=2005, month=12, day=14)
 
-# Hiatuses where there the Algorithm has been suspended. The end date can be None if the hiatus is ongoing.
+# Hiatuses where the Algorithm has been suspended and event numbering stops.
+# The end date can be None if the hiatus is ongoing.
 # These dates are inclusive
 HIATUSES: list[tuple[datetime.date, Optional[datetime.date]]] = [
     # COVID-19 induced. The March 2020 event didn't happen.
