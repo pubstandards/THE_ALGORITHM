@@ -20,13 +20,11 @@ def gen_ps_dates(start=None):
     while True:
         day = calc_middle_thursday(start.year, start.month)
         if day >= start.day:
-            date = datetime.datetime(
-                year=start.year, month=start.month, day=day, hour=18, minute=0, second=0
-            )
+            date = datetime.date(year=start.year, month=start.month, day=day)
             yield date
 
-        start = datetime.datetime(
-            year=start.year, month=start.month, day=1, hour=18, minute=0, second=0
+        start = datetime.date(
+            year=start.year, month=start.month, day=1
         ) + datetime.timedelta(days=31)
 
 
@@ -54,4 +52,4 @@ def next_ps_date():
 if __name__ == "__main__":
     generator = gen_ps_dates(start=FIRST_PUBSTANDARDS)
     for i in range(0, 300):
-        print(next(generator))
+        print(repr(next(generator)))
