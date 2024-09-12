@@ -1,5 +1,6 @@
 import datetime
-from the_algorithm import gen_ps_dates, ps_date_from_offset
+import pytest
+from the_algorithm import gen_ps_dates, ps_offset_from_date, ps_date_from_offset
 
 
 PS_DATES_TO_2020 = [
@@ -179,14 +180,42 @@ PS_DATES_TO_2020 = [
 ]
 
 
-def test_the_algorithm():
+def test_generator():
     generator = gen_ps_dates()
 
     until_2020 = [next(generator) for _ in range(len(PS_DATES_TO_2020))]
     assert until_2020 == PS_DATES_TO_2020
 
     # The next date after the COVID hiatus is 2024-09-12
-    # assert next(generator) == datetime.date(2024, 9, 12)
+    assert next(generator) == datetime.date(2024, 9, 12)
+
+    next_10_years = [next(generator) for _ in range(10 * 12)]
+    for date in next_10_years:
+        # Check we are in fact on Thursday
+        assert date.weekday() == 3
+
+
+def test_offset_from_date():
+    assert ps_offset_from_date(datetime.date(2005, 12, 15)) == 1
+    assert ps_offset_from_date(datetime.date(2006, 1, 12)) == 2
+
+    with pytest.raises(ValueError):
+        # Before the Pub Standards era
+        ps_offset_from_date(datetime.date(2005, 1, 1))
+
+    with pytest.raises(ValueError):
+        # Not a Pub Standards date
+        ps_offset_from_date(datetime.date(2005, 12, 16))
+
+    # Final date before the COVID hiatus
+    assert ps_offset_from_date(datetime.date(2020, 2, 13)) == 171
+
+    with pytest.raises(ValueError):
+        # During the COVID hiatus
+        ps_offset_from_date(datetime.date(2020, 3, 12))
+
+    # First date after COVID hiatus
+    assert ps_offset_from_date(datetime.date(2024, 9, 12)) == 172
 
 
 def test_from_offset():
@@ -195,4 +224,4 @@ def test_from_offset():
     # Final date before the COVID hiatus
     assert ps_date_from_offset(171) == datetime.date(2020, 2, 13)
     # First date after COVID hiatus
-    # assert ps_date_from_offset(172) == datetime.date(2024, 9, 12)
+    assert ps_date_from_offset(172) == datetime.date(2024, 9, 12)
